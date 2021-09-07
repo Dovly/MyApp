@@ -1,148 +1,36 @@
-<!DOCTYPE html>
-<html>
-
-  <head>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet" type="text/css">
-    <link href="https://maxst.icons8.com/vue-static/landings/line-awesome/font-awesome-line-awesome/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://cdn.jsdelivr.net/npm/quasar@1.15.23/dist/quasar.min.css" rel="stylesheet" type="text/css">
-  </head>
-
-  <body>
-    <!-- Add the following at the end of your body tag -->
-    <div id="q-app">
-        <div class="text-center text-h3 q-mt-xl">My ToDo's Manager</div>
-        <div class="flex justify-center q-mt-xl">
-            <q-input label="Enter ToDo" filled ref="addTaskInput" v-model="task" style="width: 500px;"outlined>
-                <template v-slot:append>
-                    <q-btn @click="addtask" round icon="add" label="Add ToDo" flat  color="secondary" ></q-btn>
-                </template>
-            </q-input>
-        </div>
-        <br>
-        <div class="flex justify-around">
-            <div class="q-pa-md" style="min-width: 500px;">
-                <q-toolbar class="bg-primary text-white shadow-2">
-                <q-toolbar-title class="text-center">Current ToDos - {{inCompletedTasks.length}}</q-toolbar-title>
-                </q-toolbar>
-            
-                <q-list bordered separator>
-                <q-item v-for="task in inCompletedTasks" :key="task.id" class="q-my-sm">
-                    <q-item-section avatar top>
-                    <q-avatar color="primary" text-color="white">
-                        {{ task.name[0].toUpperCase() }}
-                    </q-avatar>
-                    </q-item-section>
-            
-                    <q-item-section top>
-                    <q-item-label>{{ task.name }}</q-item-label>
-                    <q-item-label caption lines="1"><q-icon name="alarm_add"></q-icon> {{ task.createdOn }}</q-item-label>
-                    </q-item-section>
-            
-                    <q-item-section top side>
-                        <div class="text-grey-8 q-gutter-xs">
-                            <q-btn class="gt-xs" size="12px" flat dense round :color="task.completed ? 'orange' : 'green' " @click="toggleComplete(task.id)" round :icon=" task.completed ? 'undo' : 'done' ">
-                                <q-tooltip>{{ task.completed ? 'Move to Current' : 'Move to Completed'}}</q-tooltip>
-                            </q-btn>
-                            <q-btn class="gt-xs" size="12px" flat dense color="red" @click="deleteTask(task.id)" round icon="delete" ></q-btn>
-                        </div>
-                    </q-item-section>
-                </q-item>
-                </q-list>
-            </div>
-            <div class="q-pa-md"  style="min-width: 500px;">
-                <q-toolbar class="bg-primary text-white shadow-2">
-                <q-toolbar-title class="text-center">Completed ToDos - {{completedTasks.length}}</q-toolbar-title>
-                </q-toolbar>
-            
-                <q-list bordered separator>
-                <q-item v-for="task in completedTasks" :key="task.id" class="q-my-sm">
-                    <q-item-section avatar top>
-                    <q-avatar color="primary" text-color="white">
-                        {{ task.name[0].toUpperCase() }}
-                    </q-avatar>
-                    </q-item-section>
-            
-                    <q-item-section top>
-                    <q-item-label>{{ task.name }}</q-item-label>
-                    <q-item-label caption lines="1"><q-icon name="alarm_add"></q-icon> {{ task.createdOn }}</q-item-label>
-                    <q-item-label caption lines="1"><q-icon name="alarm_on"></q-icon> {{ task.completedOn }}</q-item-label>
-                    </q-item-section>
-            
-                    <q-item-section top side>
-                        <div class="text-grey-8 q-gutter-xs">
-                            <q-btn class="gt-xs" size="12px" flat dense round :color="task.completed ? 'orange' : 'green' " @click="toggleComplete(task.id)" round :icon=" task.completed ? 'undo' : 'done' ">
-                                <q-tooltip>{{ task.completed ? 'Move to Current' : 'Move to Completed'}}</q-tooltip>
-                            </q-btn>
-                            <q-btn class="gt-xs" size="12px" flat dense color="red" @click="deleteTask(task.id)" round icon="delete" ></q-btn>
-                        </div>
-                    </q-item-section>
-                </q-item>
-                
-                
-                </q-list>
-            </div>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div style="margin:10px;padding:10px;border: 3px solid #ccc;position: relative;left: 250px;top: 200px;">
+        <div style="margin:10px;padding:10px;">
+            <ul></ul>
+            <input type="text" name="name" id="name"/>
+            <input type="button" onclick="add_list()" value="add" id="btnclick" class="btn"/>
+            <span id="error" style="color:red"> </span>
         </div>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/vue@^2.0.0/dist/vue.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/quasar@1.15.23/dist/quasar.umd.min.js"></script>
-    
-    <script>
-      /*
-        Example kicking off the UI. Obviously, adapt this to your specific needs.
-        Assumes you have a <div id="q-app"></div> in your <body> above
-       */
-      new Vue({
-        el: '#q-app',
-        data: function () {
-          return {
-              task: '',
-              tasks: []
-          }
-        },
-        computed: {
-            completedTasks () {
-                return this.tasks.filter( task => task.completed)
-            },
-            inCompletedTasks () {
-                return this.tasks.filter( task => !task.completed)
-            }
-        },
-        mounted () {
-            this.tasks = JSON.parse(localStorage.getItem('tasks')) || []
-        },
-        methods: {
-        addtask () {
-            if (this.task.length) {
-                const _createdOn = Quasar.date.formatDate(Date.now(),'DD-MM-YY HH:mm').toString()
-                newTask = {id: Quasar.uid(), name: this.task, createdOn:_createdOn, completedOn:'', inprogress: false, completed: false}
-                this.tasks.push(newTask)
-                localStorage.setItem('tasks',JSON.stringify(this.tasks))
-                this.task = ''
-            } else {
-                // this.$refs.addTaskInput.error = true
-            }
-            
-        },
-        toggleComplete (id) {
-            index = this.tasks.findIndex(task => task.id == id)
-            tempTask = this.tasks[index]
-            tempTask.completed = !tempTask.completed
-            if (tempTask.completed) {
-                tempTask.completedOn = Quasar.date.formatDate(Date.now(),'DD-MM-YY HH:mm').toString()
-            } else {
-                tempTask.completedOn = ''
-            }
-            this.tasks[index] = tempTask
-            localStorage.setItem('tasks',JSON.stringify(this.tasks))
-        },
-        deleteTask(id) {
-            index = this.tasks.findIndex(task => task.id == id)
-            this.tasks.splice(index,1)
-            localStorage.setItem('tasks',JSON.stringify(this.tasks))
+</body>
+<script>
+
+    function add_list(){
+        document.getElementById('error').innerHTML="";
+        let name=document.getElementById('name').value;
+        if(name==''){
+            //alert("hi");
+            let name=document.getElementById('error').innerHTML='*enter value';
+        }else{
+            let box=document.getElementById('box');
+            let li = document.createElement('li');
+            li.textContent=name;
+
+            box.insertBefore(li,box);
         }
-        }     
-      })
-    </script>
-  </body>
+    }
+</script>
+
 </html>
