@@ -6,9 +6,31 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>hi</h1>
-    <h2>hello</h2>
-    <input type="text">
-    <h2>Hello i have added this H2</h2>
+    <div style="margin:10px;padding:10px;border: 3px solid #ccc;position: relative;left: 250px;top: 200px;">
+        <div style="margin:10px;padding:10px;">
+            <ul></ul>
+            <input type="text" name="name" id="name"/>
+            <input type="button" onclick="add_list()" value="add" id="btnclick" class="btn"/>
+            <span id="error" style="color:red"> </span>
+        </div>
+    </div>
 </body>
+<script>
+
+    function add_list(){
+        document.getElementById('error').innerHTML="";
+        let name=document.getElementById('name').value;
+        if(name==''){
+            //alert("hi");
+            let name=document.getElementById('error').innerHTML='*enter value';
+        }else{
+            let box=document.getElementById('box');
+            let li = document.createElement('li');
+            li.textContent=name;
+
+            box.insertBefore(li,box);
+        }
+    }
+</script>
+
 </html>
