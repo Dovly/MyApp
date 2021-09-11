@@ -1,0 +1,76 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic vue Todo sample</title>
+    <style>
+    
+    </style>
+</head>
+<body>
+    <div id="app">
+        FisrtName:<span>{{ firstname }}</span><h2></h2>
+        LastName:<span>{{ lastname }}</span>
+        <h3>{{ mydetails() }}</h3>
+        <h1>{{message}}</h1>
+        <button @click="reverseMsg">reverse message</button>
+        <br>
+        <br>
+        <div style="width: 300px;position:relative;left:200px;border: 2px solid black;padding: 20px;;">
+            <h3>ToDo List</h3>
+        <h2>{{ message1 }}</h2>
+        <input type="text" v-model="message1">
+        <button  @click="addTodosList">Add</button>  
+        <ol>
+           <span><h4 style="border-bottom: 1px solid #ccc;padding:5px;">ToDo</h4></span>
+            <li v-for="todo,index in Add_todo">
+              {{ todo.text }}
+              
+              <button @click="removeTodoList(index)" style="position: relative;left: 3px;">X</button>
+            </li>
+          </ol>
+          </div>
+      </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+</body>
+<script>
+var app = new Vue({
+    el: '#app',
+    data: {
+      message: 'Hello Sample Example',
+      message1: '',
+      firstname: 'Davalika',
+      lastname: 'Battula',
+      Add_todo: [
+          { text:'dovly' },
+          { text: 'Learn Vue' },
+          { text: 'Build something awesome' },
+          { text: 'Hi world'},
+          { text:'hh' }
+      ]
+    },
+    methods: {
+        addTodosList(){
+            this.Add_todo.push({text: this.message1})
+            this.message1=""
+        },
+        removeTodoList(index){
+            this.$delete(this.Add_todo,index)
+            
+        },
+        reverseMsg(){
+            this.message = this.message.split('').reverse().join('')
+        },
+        mydetails(){
+            return "I am " + this.firstname + " " + this.lastname
+            console.log(firstname)
+        }
+        // mounted (){
+            
+        
+    }
+  })
+</script>
+</html>
