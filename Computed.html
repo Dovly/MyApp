@@ -1,0 +1,112 @@
+<html lang="en">
+<head>
+    <title>Computed</title>
+    <style>
+        span{
+            color: green;
+            cursor: pointer;
+        }
+        #abc{
+            color: red;
+            cursor: pointer;
+        }
+        .available span{
+            background-color: red;
+            cursor: pointer;
+        }
+        .nearby span{
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="vue-app">
+       <h1>Computed Property</h1> 
+       <button @click="a++">Add +A</button>
+       <button @click="b++">Add +B</button>
+       <button @click="a--">Sub -1</button>
+       <button @click="b--">sub -1</button>
+       <p>A = {{a}}</p>
+       <p>B = {{b}}</p>
+       <p>Age +A = {{AddToA}}</p>
+       <p>Age +B = {{AddToB}}</p>
+    <div>
+       <h3>Dynamic CSS</h3>
+       <div @click="available=!available" v-bind:class='{available:available}'>
+           <span>Dovly</span>
+       </div>
+    </div>
+    <div v-bind:class="computedClass">
+    <span>dovly</span>
+    </div>
+    <div>
+    <button @click="Error=!Error">Error</button>
+    <button @click="Success=!Success" >Success</button>
+    <br>
+    <!-- <span v-else-if="Success" id="abc"> Yahooo!! Success</span> -->
+    <br>
+
+    <span v-show="Error"> There is an Error</span>
+    <span v-show="Success" id="abc"> Yahooo!! Success</span>
+    </div>
+    <div>
+        <h3>looping</h3>
+        {{charecters[0]}} <br>
+        {{charecters[1]}}
+
+        <ol>
+            <li v-for="char in charecters" :key="char"> {{char}} </li>
+        </ol>
+        <ul>
+            <li v-for="(ninja,index) in ninjas" :key="ninja"> {{index}} <b> {{ninja.name}} </b> age is <b>{{ninja.age}}</b></li>
+        </ul>
+    </div>
+
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+    </body>
+<script>
+var app = new Vue({
+    el:'#vue-app',
+    data:{
+        age:24,
+        a:0,
+        b:0,
+        available:true,
+        nearby:false,
+        Error:false,
+        Success:false,
+        show:true,
+        charecters: ['dovly','davalika','battula'],
+        ninjas: [
+            {name:'aadi',age:30},
+            {name:'vedha',age:25},
+            {name:'arna',age:21}
+        ]
+
+    },
+    methods:{
+        Success(){
+            return
+        } 
+    },
+    computed:{
+        AddToA(){
+            return this.a + this.age
+        },
+        AddToB(){
+            return this.b + this.age
+        },
+        computedClass(){
+            return{
+                available: this.available,
+                nearby: this.nearby
+            }
+        }
+    }
+});
+</script>
+</html>
